@@ -79,7 +79,6 @@ bool Graph::isConnected() const {
   return true;
 }
 
-// Complete this
 double Graph::getMinDistance(const std::string &nid1,
                              const std::string &nid2) const {
   assert(nodes_.size() >= 2);  // Must have at least 2 nodes
@@ -119,6 +118,7 @@ double Graph::getMinDistance(const std::string &nid1,
       }
     }
   }
+  //find distance of destination node and return
   double shortestDist = nodeList.find(destination)->second;
   return shortestDist;
 }
