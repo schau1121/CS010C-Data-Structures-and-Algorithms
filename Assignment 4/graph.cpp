@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <list>
 
 #include "edge.hpp"
 #include "node.hpp"
@@ -12,7 +13,6 @@
 // Complete this
 bool Graph::hasTripletClique() const {
   if (nodes_.size() < 3) return false;
-  // To do
   for(auto it1 : nodes_) {
     Node* node1 = it1.second; //node1
     for(auto it2 : node1->getNeighbors()) {
@@ -34,15 +34,30 @@ bool Graph::hasTripletClique() const {
 
 // Complete this
 bool Graph::isConnected() const {
-  // To do
-  /*
-  traverse graph
-  mark nodes as visited
-  for node in nodes_
-    if node is not visited
-      return false
-  return true
-  */
+  //BFS Traversal
+  std::list<Node*> queue;
+  Node* first = nodes_.begin()->second;
+  queue.push_back(first);
+  first->setVisited(true);
+  while(!queue.empty()) {
+    Node* curr = queue.front();
+    queue.pop_front();
+    for(auto i : curr->getNeighbors()) {
+      if(!i->isVisited()) {
+        i->setVisited(true);
+        queue.push_back(i);
+      }
+    }
+  }
+  //check if every node is visited
+  //if any node is not visited, return false
+  //else return true
+  for(auto i : nodes_) {
+    if(i.second->isVisited() == false) {
+      return false;
+    }
+  }
+  return true;
 }
 
 // Complete this
@@ -50,6 +65,7 @@ double Graph::getMinDistance(const std::string &nid1,
                              const std::string &nid2) const {
   assert(nodes_.size() >= 2);  // Must have at least 2 nodes
   // To do
+  
   return INF;
 }
 
