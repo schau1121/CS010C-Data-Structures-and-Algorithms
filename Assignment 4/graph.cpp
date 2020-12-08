@@ -6,11 +6,11 @@
 #include <sstream>
 #include <vector>
 #include <list>
+#include <queue>
 
 #include "edge.hpp"
 #include "node.hpp"
 
-// Complete this
 bool Graph::hasTripletClique() const {
   if (nodes_.size() < 3) return false;
   for(auto it1 : nodes_) {
@@ -52,7 +52,6 @@ bool Graph::hasTripletClique() const {
   return false;
 }
 
-// Complete this
 bool Graph::isConnected() const {
   //BFS Traversal
   std::list<Node*> queue;
@@ -84,9 +83,44 @@ bool Graph::isConnected() const {
 double Graph::getMinDistance(const std::string &nid1,
                              const std::string &nid2) const {
   assert(nodes_.size() >= 2);  // Must have at least 2 nodes
-  // To do
-
-  return INF;
+  typedef std::pair<double, Node*> nodeDist;
+  std::priority_queue<nodeDist, std::vector<nodeDist>, std::greater<nodeDist>> min_queue;
+  std::unordered_map<Node*, double> nodeList;
+  Node* initial = nodes_.find(nid1)->second;
+  Node* destination = nodes_.find(nid2)->second;
+  if(initial == nullptr && destination == nullptr) {
+    return std::numeric_limits<double>::infinity();
+  }
+  for(auto i : nodes_) {
+    i.second->setVisited(false); //set all nodes to be unvisited
+    if(i.second == initial) { //set initial distance to 0
+      nodeDist curr(0.0, initial);
+      nodeList.emplace(initial, 0.0);
+      min_queue.push(curr);
+    }
+    //set all other node distances to infinity
+    nodeList.emplace(i.second, std::numeric_limits<double>::infinity());
+  }
+  //update distances from original node
+  while(!min_queue.empty()) {
+    nodeDist current = min_queue.top();
+    Node* currNode = current.second;
+    min_queue.pop();
+    if(!currNode->isVisited()) {
+      currNode->setVisited(true);
+      for(auto i : currNode->getAdjacencyList()) {
+        Node* newNode = i->getNode();
+        double newDist = current.first + i->getWeight();
+        if(newDist < nodeList.find(newNode)->second) {
+          nodeDist newNodeDist(newDist, newNode);
+          min_queue.push(newNodeDist);
+          nodeList.find(newNode)->second = newDist;
+        }
+      }
+    }
+  }
+  double shortestDist = nodeList.find(destination)->second;
+  return shortestDist;
 }
 
 // Optional: complete this
