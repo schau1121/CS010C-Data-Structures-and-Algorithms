@@ -19,13 +19,33 @@ bool Graph::hasTripletClique() const {
       Node* node2 = it2; //edge exists between node1--node2
       for(auto it3 : nodes_) {
         if(it3.second != node1 && it3.second != node2) {
-          Node* node3 = it3.second; //node3 is not node1 or node2
+          Node* node3 = it3.second; //node3 is unique
+          
           if(node3->getNeighbors().find(node1) != node3->getNeighbors().end() &&
-          node3->getNeighbors().find(node2) != node3->getNeighbors().end()) { 
+          node3->getNeighbors().find(node2) != node3->getNeighbors().end()
+          && node3->getNeighbors().empty() == false) { 
+          
+          /*
+          std::cout << "Node 1--3:";
+          if(node3->getNeighbors().find(node1) == node3->getNeighbors().end()) {
+            std::cout << " false\n";
+          }
+          else {
+            std::cout << " true\n";
+          }
+
+          std::cout << "Node 2--3:";
+          if(node3->getNeighbors().find(node2) == node3->getNeighbors().end()) {
+            std::cout << " false\n";
+          }
+          else {
+            std::cout << " true\n";
+          }
+          */
             //returns true if edge exists between node1--node3 and node2--node3
             return true;
-          }
-        } 
+          } 
+        }
       }
     }
   }
@@ -65,7 +85,7 @@ double Graph::getMinDistance(const std::string &nid1,
                              const std::string &nid2) const {
   assert(nodes_.size() >= 2);  // Must have at least 2 nodes
   // To do
-  
+
   return INF;
 }
 

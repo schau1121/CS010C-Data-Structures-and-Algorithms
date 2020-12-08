@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <set>
 #include <string>
+#include <assert.h>
 
 class Edge;
 
