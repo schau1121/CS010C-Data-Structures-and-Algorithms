@@ -1,0 +1,23 @@
+Pseudocode for an algorithm to check if an undirected graph has a cycle
+use depth first search to detect cycle in O(n + m) time.
+	DFS traversal on graph
+	For every visited node 'n'
+		if there is an adjacent node 't' such that t is already visited and is not the parent of n
+			return true
+	return false
+
+
+Pseudocode for DFS using a stack
+	for each node
+		visited = false
+	stack = empty
+	push initial node to stack
+	while stack is not empty
+		curr = top of stack
+		if curr is not visited
+			curr->visited = true
+		for all edges of curr
+			push neighbor to stack
+
+	
+	

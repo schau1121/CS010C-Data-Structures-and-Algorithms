@@ -9,17 +9,15 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <ctime>
 
 #include "graph.hpp"
 
-// A pair of nodes such that node1 < node2
 typedef struct NodePair {
   size_t index1;
   size_t index2;
 
   NodePair(size_t i, size_t j) {
-    assert(i >= 0);
-    assert(j >= 0);
     assert(i != j);
     if (i < j) {
       index1 = i;
@@ -29,16 +27,18 @@ typedef struct NodePair {
       index2 = i;
     }
   }
+
+  bool operator==(const NodePair& other) const {
+    return index1 == other.index1 && index2 == other.index2;
+  }
 } NodePair;
 
 // Make NodePair hashable
 namespace std {
 template <>
-struct std::hash<NodePair> {
+struct hash< NodePair > {
   inline size_t operator()(const NodePair& p) const {
-    auto hash1 = std::hash<size_t>{}(p.index1);
-    auto hash2 = std::hash<size_t>{}(p.index2);
-    return hash1 ^ hash2;
+    return hash<size_t>{}(p.index1) ^ hash<size_t>{}(p.index2);
   }
 };
 }  // namespace std
@@ -59,7 +59,7 @@ static std::unordered_map<NodePair, double> NODE_PAIRS;
 static std::random_device RD;
 static std::mt19937 GEN(RD());
 static std::uniform_int_distribution<size_t> DIST;
-
+std::string genName();
 // Generate n unique node names
 static void generateNodeNames(size_t n);
 static size_t getRandomIndex();
@@ -85,13 +85,24 @@ int main() {
   return 0;
 }
 
+std::string genName() {
+  srand(time(nullptr));
+  std::string tmp = "";
+  const char alpha[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  tmp.reserve(3);
+  for(int i = 0; i < 3; i++) {
+    tmp += alpha[rand() % (sizeof(alpha) - 1)];
+  }
+  return tmp;
+}
+
 static void generateNodeNames(size_t n) {
   assert(n > 0);
   assert(NODE_NAMES.empty());
   std::unordered_set<std::string> names;
   names.reserve(n);
   while (names.size() < n) {
-    std::string name = "";  // To do: Generate a random name here
+    std::string name = genName(); 
     names.insert(name);     // Insert will fail for duplicate names
   }
   NODE_NAMES.reserve(n);
