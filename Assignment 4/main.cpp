@@ -6,6 +6,7 @@
 #include <iostream>
 #include <random>
 #include <string>
+#include <chrono>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -81,6 +82,28 @@ int main() {
                   it.second);
   }
   graph.printGraph();
+
+  auto start_time1 = std::chrono::steady_clock::now();
+  graph.hasTripletClique();
+  auto end_time1 = std::chrono::steady_clock::now();
+  unsigned long elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time1 - start_time1).count();
+  std::cout << "\nTime of hasTripletClique(): " << elapsed << "ns" << std::endl;
+
+
+  auto start_time = std::chrono::high_resolution_clock::now();
+  graph.isConnected();
+  auto end_time = std::chrono::high_resolution_clock::now();
+  elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
+  std::cout << "Time of isConnected(): " << elapsed << "ns" << std::endl;
+
+  srand(time(nullptr));
+  std::string name1 = NODE_NAMES[rand() % (sizeof(NODE_NAMES) - 1)];
+  std::string name2 = NODE_NAMES[rand() % (sizeof(NODE_NAMES) - 1)];
+  start_time = std::chrono::high_resolution_clock::now();
+  graph.getMinDistance(name1, name2);
+  end_time = std::chrono::high_resolution_clock::now();
+  elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
+  std::cout << "Time of getMinDistance(): " << elapsed << "ns" << std::endl;
 
   return 0;
 }

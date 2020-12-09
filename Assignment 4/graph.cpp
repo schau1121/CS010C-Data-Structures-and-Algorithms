@@ -83,7 +83,7 @@ double Graph::getMinDistance(const std::string &nid1,
                              const std::string &nid2) const {
   assert(nodes_.size() >= 2);  // Must have at least 2 nodes
   typedef std::pair<double, Node*> nodeDist;
-  std::priority_queue<nodeDist, std::vector<nodeDist>, std::greater<nodeDist>> min_queue;
+  std::priority_queue<nodeDist, std::vector<nodeDist>, std::greater<nodeDist>> min_heap;
   std::unordered_map<Node*, double> nodeList;
   Node* initial = nodes_.find(nid1)->second;
   Node* destination = nodes_.find(nid2)->second;
@@ -92,19 +92,19 @@ double Graph::getMinDistance(const std::string &nid1,
   }
   for(auto i : nodes_) {
     i.second->setVisited(false); //set all nodes to be unvisited
-    if(i.second == initial) { //set initial distance to 0
+    if(i.second == initial) { //set initial distance to 0 and push initial to heap
       nodeDist curr(0.0, initial);
       nodeList.emplace(initial, 0.0);
-      min_queue.push(curr);
+      min_heap.push(curr);
     }
     //set all other node distances to infinity
     nodeList.emplace(i.second, std::numeric_limits<double>::infinity());
   }
   //update distances from original node
-  while(!min_queue.empty()) {
-    nodeDist current = min_queue.top();
+  while(!min_heap.empty()) {
+    nodeDist current = min_heap.top();
     Node* currNode = current.second;
-    min_queue.pop();
+    min_heap.pop();
     if(!currNode->isVisited()) {
       currNode->setVisited(true);
       for(auto i : currNode->getAdjacencyList()) {
@@ -112,7 +112,7 @@ double Graph::getMinDistance(const std::string &nid1,
         double newDist = current.first + i->getWeight();
         if(newDist < nodeList.find(newNode)->second) {
           nodeDist newNodeDist(newDist, newNode);
-          min_queue.push(newNodeDist);
+          min_heap.push(newNodeDist);
           nodeList.find(newNode)->second = newDist;
         }
       }
