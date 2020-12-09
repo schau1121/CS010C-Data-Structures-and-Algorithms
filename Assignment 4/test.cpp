@@ -46,10 +46,10 @@ void test_case_1() {
 
   double distAC = g.getMinDistance("A", "C");
   ASSERT(isinf(distAC), "distAC = " << distAC);
-/*
+
   double longestPath = g.getLongestSimplePath();
   ASSERT(isDoubleEqual(longestPath, 1.0), "longestPath = " << longestPath);
-*/
+
   std::cout << "Test case 1 passed" << std::endl;
 }
 
@@ -73,10 +73,10 @@ void test_case_2() {
 
   double distAC = g.getMinDistance("A", "C");
   ASSERT(isDoubleEqual(distAC, 3.0), "distAC = " << distAC);
-/*
+
   double longestPath = g.getLongestSimplePath();
   ASSERT(isDoubleEqual(longestPath, 6.0), "longestPath = " << longestPath);
-*/
+
   std::cout << "Test case 2 passed" << std::endl;
 }
 
@@ -116,10 +116,10 @@ void test_case_3() {
 
   double distAE = g.getMinDistance("A", "E");
   ASSERT(isinf(distAE), "distAE = " << distAE);
-/*
+
   double longestPath = g.getLongestSimplePath();
   ASSERT(isDoubleEqual(longestPath, 12.0), "longestPath = " << longestPath);
-*/
+
   std::cout << "Test case 3 passed" << std::endl;
 }
 

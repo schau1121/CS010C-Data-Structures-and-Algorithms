@@ -68,6 +68,7 @@ static size_t getRandomIndex();
 static void generateNodePairs(size_t m, double weight);
 
 int main() {
+  
   generateNodeNames(100);
   generateNodePairs(500, 1.0);
   generateNodePairs(500, 2.0);
@@ -104,7 +105,24 @@ int main() {
   end_time = std::chrono::high_resolution_clock::now();
   elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
   std::cout << "Time of getMinDistance(): " << elapsed << "ns" << std::endl;
-
+  /*
+  //driver code for getLongestSimplePath case
+  generateNodeNames(25);
+  generateNodePairs(125, 1.0);
+  Graph graph(false);
+  for (std::string name : NODE_NAMES) graph.addNode(name);
+  // Add edges
+  for (auto it : NODE_PAIRS) {
+    graph.addEdge(NODE_NAMES[it.first.index1], NODE_NAMES[it.first.index2],
+                  it.second);
+  }
+  //graph.printGraph();
+  auto start_time = std::chrono::high_resolution_clock::now();
+  graph.getLongestSimplePath();
+  auto end_time = std::chrono::high_resolution_clock::now();
+  unsigned long elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
+  std::cout << "Time of getLongestSimplePath(): " << elapsed << "ns" << std::endl;
+  */
   return 0;
 }
 

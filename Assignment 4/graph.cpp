@@ -126,8 +126,53 @@ double Graph::getMinDistance(const std::string &nid1,
 // Optional: complete this
 double Graph::getLongestSimplePath() const {
   assert(nodes_.size() >= 1);  // Must have at least 1 node
-  // To do
-  return 0.0;
+  double maxPath = 0.0;
+  typedef std::pair<double, Node*> nodeDist;
+  for(auto node : nodes_) {
+    std::priority_queue<nodeDist, std::vector<nodeDist>, std::less<nodeDist>> max_heap;
+    std::unordered_map<Node*, double> nodeList;
+  
+    for(auto i : nodes_) {
+      i.second->setVisited(false); //set all nodes to be unvisited
+      if(i == node) { //set initial distance to 0 and push initial to heap
+        nodeDist curr(0.0, i.second);
+        nodeList.emplace(i.second, 0.0);
+        max_heap.push(curr);
+      }
+      //set all other node distances to neg infinity
+      nodeList.emplace(i.second, -std::numeric_limits<double>::infinity());
+    }
+    //update distances from original node
+    while(!max_heap.empty()) {
+      nodeDist current = max_heap.top();
+      Node* currNode = current.second;
+      max_heap.pop();
+      if(!currNode->isVisited()) {
+        currNode->setVisited(true);
+        for(auto i : currNode->getAdjacencyList()) {
+          Node* newNode = i->getNode();
+          if(!newNode->isVisited()) {
+            double newDist = current.first + i->getWeight();
+            if(newDist > nodeList.find(newNode)->second) {
+              nodeDist newNodeDist(newDist, newNode);
+              max_heap.push(newNodeDist);
+              nodeList.find(newNode)->second = newDist;
+            }
+          }
+        }
+      }
+    }
+    double largestDist = 0.0;
+    for(auto i : nodeList){
+      if(i.second > largestDist) {
+        largestDist = i.second;
+      }
+    }
+    if(largestDist > maxPath) {
+      maxPath = largestDist;
+    }
+  }
+  return maxPath;
 }
 
 Graph::Graph(bool directed) : directed_(directed){};
