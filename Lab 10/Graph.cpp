@@ -41,6 +41,15 @@ bool Graph::add_vertex(const string& v) {
   // Implement here
   // Return true if the vertex can be added, otherwise return false (vertex name
   // is invalid or a vertex with the same name already exists).
+  if(!isValidVertexName(v) || names_.find(v) != names_.end()) {
+    //invalid name or vertex with same name already exists
+    return false;
+  }
+  Vertex curr(v);
+  vertices_.emplace_back(curr);
+  size_t index = vertices_.size() - 1;
+  names_[v] = index;
+  return true;
 }
 
 bool Graph::add_edge(const string& v1, const string& v2, unsigned int cost) {
@@ -48,16 +57,57 @@ bool Graph::add_edge(const string& v1, const string& v2, unsigned int cost) {
   // Return true if the edge can be added, otherwise return false (either vertex
   // cannot be found, or the cost is 0 or UINT_MAX).
   // Remember to increment numEdges_.
+  if(!isValidVertexName(v1) || !isValidVertexName(v2)) {
+    return false;
+  }
+  if(vertices_.size() == 0) {
+    return false;
+  }
+  if(names_.find(v1) == names_.end() || names_.find(v2) == names_.end()) {
+    return false;
+  }
+  if(cost == 0 || cost == UINT_MAX) {
+    return false;
+  }
+  size_t vertex1Index = names_.find(v1)->second;
+  size_t vertex2Index = names_.find(v2)->second;
+  Vertex &currVertex = vertices_.at(vertex1Index); 
+  currVertex.neighbors.emplace_back(vertex2Index, cost);
+  numEdges_++;
+  return true;
 }
 
 void Graph::bfs() {
   // Implement BFS here
   // You are NOT allowed to modify Vertex.
+  if(vertices_.size() == 0) {
+    return;
+  }
+  queue<size_t> queue;
+  vector<bool> visited(vertices_.size(), false);
+  vertices_.at(0).distance = 0;
+  queue.push(0);
+  visited.at(0) = true;
+  while(!queue.empty()) {
+    size_t currIndex = queue.front();
+    Vertex curr = vertices_.at(currIndex);
+    queue.pop();
+    for(auto it : curr.neighbors) {
+      if(visited.at(it.first) == false) {
+        queue.push(it.first);
+        visited.at(it.first) = true;
+        if(vertices_.at(it.first).distance > curr.distance + it.second) {
+          vertices_.at(it.first).distance = curr.distance + it.second;
+          vertices_.at(it.first).prev = currIndex;
+        }
+      }
+    }
+  }
 }
 
 list<string> Graph::getVertices() const {
   list<string> ret;
-  for (vector<Vertex>::const_iterator it = vertices_.begin();
+  for (auto it = vertices_.begin();
        it != vertices_.end(); ++it) {
     ret.push_back(it->label);
   }

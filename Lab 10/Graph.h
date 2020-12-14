@@ -44,7 +44,7 @@ class Graph {
   vector<Vertex> vertices_;
   size_t numEdges_;
   unordered_map<string, size_t> names_;
-
+  
   static bool isValidVertexName(const string &name);
   void visualizeTree(ostream &outs) const;
 };
